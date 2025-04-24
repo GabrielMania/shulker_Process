@@ -1,19 +1,16 @@
 import sys
+import os
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtUiTools import QUiLoader
 
-
-
 loader = QUiLoader()
 app = QtWidgets.QApplication(sys.argv)
-window = loader.load("C:/Users/srgab/Desktop/assembler-1.0/assemblerUi.ui", None)
 
-
+ui_file_path = os.path.join(os.path.dirname(__file__), "assemblerUi.ui")
+window = loader.load(ui_file_path, None)
 
 contador_bytes = int()
 binario = str()
-
-
 
 def converter():
     print('convertido')
@@ -37,8 +34,9 @@ def definir_saida(texto_saida):
     print("saida definida")
     window.caixa_texto_binario.setPlainText(texto_saida)
 
+icon_path = os.path.join(os.path.dirname(__file__), "shulker.png")
 
-icone = QtGui.QIcon('C:/Users/srgab/Desktop/assembler-1.0/shulker.png')
+icone = QtGui.QIcon(icon_path)
 window.setWindowTitle("SK2_assembler")
 window.setWindowIcon(icone)
 window.converter.clicked.connect(converter)
@@ -46,7 +44,6 @@ window.carregar.clicked.connect(carregar)
 window.copiar.clicked.connect(copiar)
 window.salvar.clicked.connect(salvar)
 window.contador_bytes.setText(f"Bytes:{contador_bytes}")
-
 
 window.show()
 app.exec()
