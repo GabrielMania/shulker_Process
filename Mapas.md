@@ -6,7 +6,7 @@ Todos os mapas versão a versão estão disponíveis no Drive:
 
 ## Log de Atualização
 
-(Adicionar informações sobre as atualizações aqui)
+atualmente implementando as intruções e definindo metodos para renderização
 
 ## Lista de Instruções
 
@@ -27,9 +27,8 @@ Todos os mapas versão a versão estão disponíveis no Drive:
 | `Dload`   | Carregar dados                             | ✅            |
 | `increment` | Incrementar                                | ✅            |
 | `stack(save-load)` | Salvar/Carregar da pilha                 | ✅            |
-| `jumpC`   | Saltar condicional                         | ❌            |
+| `jumpC`   | Saltar condicional                         | ✅            |
 | `dataacess(save-load)` | Acesso a dados (salvar/carregar)       | ❌            |
-| `Mm0`     | Maior, menor ou zero (positivo)          | ❌            |
 
 ### GPU
 
