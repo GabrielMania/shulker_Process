@@ -6,13 +6,13 @@ Todos os mapas versão a versão estão disponíveis no Drive:
 
 ## Log de Atualização
 
-atualmente implementando as intruções e definindo metodos para renderização
+Atualmente implementando as instruções e definindo métodos para renderização.
 
 ## Lista de Instruções
 
 ### CPU
 
-| Instrução | Descrição                                  | Implementação |
+| Instrução | Descrição                                  | check list |
 | :-------- | :----------------------------------------- | :------------ |
 | `add`     | Adição                                     | ✅            |
 | `or`      | Operação OR                                | ✅            |
@@ -32,4 +32,12 @@ atualmente implementando as intruções e definindo metodos para renderização
 
 ### GPU
 
-A definir
+| Instruções  | Descrição                                       | Check List |
+| :---------- | :---------------------------------------------- | :--------- |
+| `renderCrt` | Atualiza a tela como um CRT                    | ❌         |
+| `drawSprite`| Renderiza um sprite em uma coordenada da tela | ❌         |
+| `drawPixel` | Pinta o pixel na coordenada na cor informada   | ❌         |
+|             |                                                 |            |
+|             |                                                 |            |
+|             |                                                 |            |
+
