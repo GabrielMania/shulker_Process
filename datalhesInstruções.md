@@ -28,7 +28,7 @@ Atualmente implementando as instruções e definindo métodos para renderizaçã
 | `increment` | Incrementar                                | ✅            |
 | `stack(save-load)` | Salvar/Carregar da pilha                 | ✅            |
 | `jumpC`   | Saltar condicional                         | ✅            |
-| `dataacess(save-load)` | Acesso a dados (salvar/carregar)       | ❌            |
+| `dataaccess(save-load)` | Acesso a dados (salvar/carregar)       | ❌            |
 
 ### GPU
 
