@@ -6,13 +6,13 @@ Todos os mapas versão a versão estão disponíveis no Drive:
 
 ## Log de Atualização
 
-(Adicionar informações sobre as atualizações aqui)
+Atualmente implementando as instruções e definindo métodos para renderização.
 
 ## Lista de Instruções
 
 ### CPU
 
-| Instrução | Descrição                                  | Implementação |
+| Instrução | Descrição                                  | check list |
 | :-------- | :----------------------------------------- | :------------ |
 | `add`     | Adição                                     | ✅            |
 | `or`      | Operação OR                                | ✅            |
@@ -27,10 +27,17 @@ Todos os mapas versão a versão estão disponíveis no Drive:
 | `Dload`   | Carregar dados                             | ✅            |
 | `increment` | Incrementar                                | ✅            |
 | `stack(save-load)` | Salvar/Carregar da pilha                 | ✅            |
-| `jumpC`   | Saltar condicional                         | ❌            |
+| `jumpC`   | Saltar condicional                         | ✅            |
 | `dataacess(save-load)` | Acesso a dados (salvar/carregar)       | ❌            |
-| `Mm0`     | Maior, menor ou zero (positivo)          | ❌            |
 
 ### GPU
 
-A definir
+| Instruções  | Descrição                                       | Check List |
+| :---------- | :---------------------------------------------- | :--------- |
+| `renderCrt` | Atualiza a tela como um CRT                    | ❌         |
+| `drawSprite`| Renderiza um sprite em uma coordenada da tela | ❌         |
+| `drawPixel` | Pinta o pixel na coordenada na cor informada   | ❌         |
+|             |                                                 |            |
+|             |                                                 |            |
+|             |                                                 |            |
+
