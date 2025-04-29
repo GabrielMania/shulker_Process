@@ -11,3 +11,5 @@ Recomenda-se a seguinte organização da memória para otimizar o uso:
 *   **0x0000 - 0x2EE0:** Destinado ao armazenamento do código binário do programa. As instruções devem ser alinhadas em endereços pares.
 *   **0x2EE1 - 0x4E20:** Reservado para dados dinâmicos e endereços virtuais utilizados pelos programas em execução.
 *   **0x8CA0 - 0x10000:** Designado para dados de renderização, permitindo a manipulação visual dentro do ambiente Minecraft.
+
+**Nota:** Para informações mais detalhadas sobre as instruções suportadas, acesse [Detalhes das Instruções](datalhesInstruções.md).
