@@ -1,6 +1,6 @@
 import sys
 import os
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtGui, QtWidgets
 from PySide6.QtUiTools import QUiLoader
 
 loader = QUiLoader()

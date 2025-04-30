@@ -1,0 +1,300 @@
+#ferramenta para criar sprites binarios para uso no processador
+
+#importando Dependencias
+import sys
+import os
+import contextlib
+from PySide6 import QtGui, QtWidgets, QtCore
+from PySide6.QtUiTools import QUiLoader
+from PySide6.QtCore import Qt
+
+# Constante global de cores
+CORES = {
+    "Preto": Qt.black,
+    "Branco": Qt.white,
+    "Vermelho": Qt.red,
+    "Verde": Qt.green,
+    "Azul": Qt.blue,
+    "Amarelo": Qt.yellow,
+    "Cinza": Qt.gray,
+    "CinzaClaro": Qt.lightGray,
+    "Marron": QtGui.QColor(139, 69, 19),
+    "Laranja": QtGui.QColor(255, 165, 0),
+    "VerdeClaro": QtGui.QColor(144, 238, 144),
+    "Cyano": Qt.cyan,
+    "AzulClaro": QtGui.QColor(173, 216, 230),
+    "Roxo": QtGui.QColor(128, 0, 128),
+    "Magenta": Qt.magenta,
+    "Rosa": QtGui.QColor(255, 192, 203)
+}
+
+# Contexto para suprimir a saída padrão de erros
+@contextlib.contextmanager
+def suprimir_stderr():
+    original = sys.stderr
+    sys.stderr = open(os.devnull, 'w')
+    try:
+        yield
+    finally:
+        sys.stderr = original
+
+class DrawingArea(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.grid_size = 8
+        self.current_color = Qt.black
+        self.grid = [[Qt.white for _ in range(128)] for _ in range(128)]
+        self.setMouseTracking(True)
+
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+        cell_width = self.width() / self.grid_size
+        cell_height = self.height() / self.grid_size
+
+        for row in range(self.grid_size):
+            for col in range(self.grid_size):
+                x = col * cell_width
+                y = row * cell_height
+                rect = QtCore.QRectF(x, y, cell_width, cell_height)
+                painter.fillRect(rect, self.grid[row][col])
+                painter.drawRect(rect)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.paint_cell(event.position())
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+            self.paint_cell(event.position())
+
+    def paint_cell(self, pos):
+        cell_width = self.width() / self.grid_size
+        cell_height = self.height() / self.grid_size
+        
+        col = int(pos.x() // cell_width)
+        row = int(pos.y() // cell_height)
+        
+        if 0 <= row < self.grid_size and 0 <= col < self.grid_size:
+            self.grid[row][col] = self.current_color
+            self.update()
+
+    def set_grid_size(self, size):
+        self.grid_size = size
+        self.grid = [[Qt.white for _ in range(128)] for _ in range(128)]
+        self.update()
+
+    def set_color(self, cor_nome):
+        # Seleciona a cor a partir da constante global
+        self.current_color = CORES.get(cor_nome, Qt.black)
+
+    def grid_to_binary(self):
+        binary_data = []
+        for row in range(self.grid_size):
+            byte = 0
+            for col in range(self.grid_size):
+                if self.grid[row][col] == Qt.black:
+                    byte |= (1 << (7 - col))
+            binary_data.append(byte)
+        return bytes(binary_data)
+
+    def binary_to_grid(self, data):
+        self.grid = [[Qt.white for _ in range(128)] for _ in range(128)]
+        for row, byte in enumerate(data):
+            if row >= self.grid_size:
+                break
+            for col in range(8):
+                if byte & (1 << (7 - col)):
+                    self.grid[row][col] = Qt.black
+        self.update()
+
+    def grid_to_image(self):
+        image = QtGui.QImage(self.grid_size, self.grid_size, QtGui.QImage.Format_RGB32)
+        for row in range(self.grid_size):
+            for col in range(self.grid_size):
+                image.setPixelColor(col, row, self.grid[row][col])
+        return image
+
+    def find_nearest_color(self, target_color):
+        # Encontra a cor suportada mais próxima
+        min_distance = float('inf')
+        cor_mais_proxima = Qt.black
+        for cor in CORES.values():
+            # Converte para QColor caso necessário
+            if not isinstance(cor, QtGui.QColor):
+                cor = QtGui.QColor(cor)
+            if not isinstance(target_color, QtGui.QColor):
+                target_color = QtGui.QColor(target_color)
+            r1, g1, b1 = target_color.getRgb()[:3]
+            r2, g2, b2 = cor.getRgb()[:3]
+            distancia = ((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2) ** 0.5
+            if distancia < min_distance:
+                min_distance = distancia
+                cor_mais_proxima = cor
+        return cor_mais_proxima
+
+    def image_to_grid(self, image):
+        self.grid = [[Qt.white for _ in range(128)] for _ in range(128)]
+        scaled_image = image.scaled(self.grid_size, self.grid_size)
+        
+        for row in range(self.grid_size):
+            for col in range(self.grid_size):
+                color = scaled_image.pixelColor(col, row)
+                # Convert to nearest supported color
+                matched_color = self.find_nearest_color(color)
+                self.grid[row][col] = matched_color
+        self.update()
+
+loader = QUiLoader()
+app = QtWidgets.QApplication(sys.argv)
+ui_file_path = os.path.join(os.path.dirname(__file__), "HudSpriteEditor.ui")
+window = loader.load(ui_file_path, None)
+icon_path = os.path.join(os.path.dirname(__file__), "shulkerArtista.png")
+icone = QtGui.QIcon(icon_path)
+window.setWindowTitle("SKng_SpriteEditor")
+window.setWindowIcon(icone)
+
+drawing_area = DrawingArea()
+areaDesenho = window.findChild(QtWidgets.QFrame, "areaDesenho")
+grid_combo = window.findChild(QtWidgets.QComboBox, "gridSizeComboBox")
+color_combo = window.findChild(QtWidgets.QComboBox, "comboBox")
+save_button = window.findChild(QtWidgets.QPushButton, "saveButton")
+load_button = window.findChild(QtWidgets.QPushButton, "loadButton")
+import_button = window.findChild(QtWidgets.QPushButton, "importButton")
+export_button = window.findChild(QtWidgets.QPushButton, "exportButton")
+
+layout = areaDesenho.layout()
+placeholder = window.findChild(QtWidgets.QWidget, "drawingAreaWidgetPlaceholder")
+if placeholder:
+    layout.removeWidget(placeholder)
+    placeholder.deleteLater()
+layout.addWidget(drawing_area)
+
+def update_grid_size(text):
+    size = int(text.split('x')[0])
+    drawing_area.set_grid_size(size)
+
+def update_color(color_name):
+    drawing_area.set_color(color_name)
+
+def save_sprite():
+    file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
+        window,
+        "Salvar Sprite",
+        "",
+        "Sprite (*.SKng);;PNG (*.png);;JPEG (*.jpg *.jpeg);;Todos os Arquivos (*)"
+    )
+    if file_name:
+        image = drawing_area.grid_to_image()
+        image.save(file_name)
+
+def load_sprite():
+    # Abre diálogo para carregar sprite (imagem)
+    file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
+        window,
+        "Carregar Sprite",
+        "",
+        "Imagens (*.SKng *.png *.jpg *.jpeg);;Todos os Arquivos (*)"
+    )
+    if file_name:
+        with suprimir_stderr():
+            image = QtGui.QImage(file_name)
+        if not image.isNull():
+            drawing_area.image_to_grid(image)
+
+def import_sprite():
+    # Abre diálogo para importar sprite binário
+    file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
+        window,
+        "Importar Sprite",
+        "",
+        "Sprite Binário (*.SKbin);;Todos os Arquivos (*)"
+    )
+    if file_name:
+        try:
+            with open(file_name, 'r') as f:
+                linhas = f.readlines()
+            if not linhas:
+                QtWidgets.QMessageBox.warning(window, "Erro", "Arquivo vazio!")
+                return
+            lista_cores = list(CORES.values())
+            if drawing_area.grid_size == 128:
+                # Modo 128x128: cada linha representa um pixel com cor nos 4 primeiros bits
+                for i, linha in enumerate(linhas):
+                    if i >= 128 * 128:
+                        break
+                    binario = linha.strip()
+                    if len(binario) == 16:
+                        indice_cor = int(binario[:4], 2)
+                        x = i % 128
+                        y = i // 128
+                        if indice_cor < len(lista_cores):
+                            drawing_area.grid[y][x] = lista_cores[indice_cor]
+            else:
+                # Modo normal: cada linha contém informações X, Y, cor
+                for linha in linhas:
+                    binario = linha.strip()
+                    if len(binario) == 16:
+                        x = int(binario[:4], 2)
+                        y = int(binario[4:8], 2)
+                        indice_cor = int(binario[12:], 2)
+                        if x < drawing_area.grid_size and y < drawing_area.grid_size:
+                            if indice_cor < len(lista_cores):
+                                drawing_area.grid[y][x] = lista_cores[indice_cor]
+            drawing_area.update()
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(window, "Erro", f"Erro ao ler arquivo: {str(e)}")
+
+def export_sprite():
+    # Abre diálogo para exportar sprite binário
+    file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
+        window,
+        "Exportar Sprite",
+        "",
+        "Sprite Binário (*.SKbin);;Todos os Arquivos (*)"
+    )
+    if file_name:
+        try:
+            lista_cores = list(CORES.values())
+            linhas = []
+            if drawing_area.grid_size == 128:
+                # Modo 128x128: armazena apenas a cor nos 4 primeiros bits
+                for y in range(128):
+                    for x in range(128):
+                        cor = drawing_area.grid[y][x]
+                        try:
+                            indice_cor = lista_cores.index(cor)
+                        except ValueError:
+                            indice_cor = 0
+                        binario = format(indice_cor, '04b') + '0' * 12
+                        linhas.append(binario + '\n')
+            else:
+                # Modo normal: armazena X, Y, cor em formato de 16 bits
+                for y in range(drawing_area.grid_size):
+                    for x in range(drawing_area.grid_size):
+                        cor = drawing_area.grid[y][x]
+                        try:
+                            indice_cor = lista_cores.index(cor)
+                        except ValueError:
+                            indice_cor = 0
+                        binario = format(x, '04b') + format(y, '04b') + '0000' + format(indice_cor, '04b')
+                        linhas.append(binario + '\n')
+            if not linhas:
+                QtWidgets.QMessageBox.warning(window, "Aviso", "Nenhum dado para exportar!")
+                return
+            with open(file_name, 'w') as f:
+                f.writelines(linhas)
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(window, "Erro", f"Erro ao salvar arquivo: {str(e)}")
+
+grid_combo.currentTextChanged.connect(update_grid_size)
+color_combo.currentTextChanged.connect(update_color)
+save_button.clicked.connect(save_sprite)
+load_button.clicked.connect(load_sprite)
+import_button.clicked.connect(import_sprite)
+export_button.clicked.connect(export_sprite)
+
+update_grid_size(grid_combo.currentText())
+update_color(color_combo.currentText())
+
+window.show()
+app.exec()
