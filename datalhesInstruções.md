@@ -28,17 +28,16 @@ Atualmente implementando as instruções e definindo métodos para renderizaçã
 | `increment` | Incrementar                                | ✅            |
 | `stack(save-load)` | Salvar/Carregar da pilha                 | ✅            |
 | `jumpC`   | Saltar condicional                         | ✅            |
-| `dataaccess(save-load)` | Acesso a dados (salvar/carregar)       | ❌            |
+| `dataLoad` | Carrega dados de um endereço em um registrador para outro registrador | ❌            |
+| `dataSave` | Salva dados de um registrador no endereço em outro registrador | ❌            |
 
 ### GPU
 
 | Instruções  | Descrição                                       | Check List |
 | :---------- | :---------------------------------------------- | :--------- |
-| `renderCrt` | Atualiza a tela como um CRT                    | ❌         |
-| `drawSprite`| Renderiza um sprite em uma coordenada da tela | ❌         |
-| `drawPixel` | Pinta o pixel na coordenada na cor informada   | ❌         |
-|             |                                                 |            |
-|             |                                                 |            |
-|             |                                                 |            |
+| `loadBackground` | Carrega dados do Background e carrega para tela | ❌         |
+| `ReloadBackground` | Recarrega o Background apagando os sprites   | ❌         |
+| `drawSprite`   | Renderiza um sprite em uma coordenada da tela  | ❌         |
+| `drawPixel`    | Pinta o pixel na coordenada na cor informada   | ❌         |
 
 ### Descrição
