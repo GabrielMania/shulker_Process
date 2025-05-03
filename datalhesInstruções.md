@@ -35,9 +35,9 @@ Atualmente implementando as instruções e definindo métodos para renderizaçã
 
 | Instruções  | Descrição                                       | Check List |
 | :---------- | :---------------------------------------------- | :--------- |
-| `loadBackground` | Carrega dados do Background e carrega para tela | ❌         |
-| `ReloadBackground` | Recarrega o Background apagando os sprites   | ❌         |
+| `loadBackground` | Carrega dados do Background e carrega para tela | ✅         |
+| `ReloadBackground` | Recarrega o Background apagando os sprites   | ✅         |
 | `drawSprite`   | Renderiza um sprite em uma coordenada da tela  | ❌         |
-| `drawPixel`    | Pinta o pixel na coordenada na cor informada   | ❌         |
+| `drawPixel`    | Pinta o pixel na coordenada na cor informada   | ✅         |
 
 ### Descrição
