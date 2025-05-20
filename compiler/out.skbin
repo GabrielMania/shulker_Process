@@ -1,0 +1,6 @@
+dload reg7 0x0000
+nop
+jmp label(a)
+add reg0,reg1,reg2
+nop
+inc reg0
