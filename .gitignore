@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artifacts
+build/
+dist/
+*.spec
+*.exe
+*.egg-info/
+*.egg
+
+# Other
+.DS_Store
+*.log
+*.tmp
+*.swp
+*~
+*.out

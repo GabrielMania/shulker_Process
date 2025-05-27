@@ -12,4 +12,15 @@ Recomenda-se a seguinte organização da memória para otimizar o uso:
 *   **0x2EE1 - 0x4E20:** Reservado para dados dinâmicos e endereços virtuais utilizados pelos programas em execução.
 *   **0x8CA0 - 0x10000:** Designado para dados de renderização, permitindo a manipulação visual dentro do ambiente Minecraft.
 
-**Nota:** Para informações mais detalhadas sobre as instruções suportadas, acesse [Detalhes das Instruções](datalhesInstruções.md).
+**Nota:** Para informações mais detalhadas sobre as instruções suportadas, acesse [Detalhes das Instruções](docs/detalhesInstrucoes.md).
+
+### Mapas Versionados
+
+Todos os mapas versão a versão estão disponíveis no Drive:
+
+[Link para o Google Drive](https://drive.google.com/drive/folders/1Ebdu63KJPf-L2AKmwXlmZI4NaxptC99T?usp=sharing)
+
+### Ferramentas
+
+*   **compiler**: Um compilador para a linguagem assembly do processador Shulker.
+*   **shulkerArtist**: Uma ferramenta para criar e editar sprites para uso com o processador Shulker.
